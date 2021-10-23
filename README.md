@@ -1,6 +1,7 @@
 # BankApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.5.
+This the frontend part of: https://github.com/mohamedtrigui/bankApp
 
 ## Development server
 
