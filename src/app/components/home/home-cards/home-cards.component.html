@@ -1,0 +1,160 @@
+<div class="col">
+  <div class="row">
+    <div class="card bg-light m-3" style="max-width: 40vw">
+      <div class="card-header" style="width: fill">
+        Consultation d'un compte
+      </div>
+      <div class="card-body">
+        <label class="col-form-label mt-4" for="inputDefault"
+          >Entrez le code de votre compte bancaire</label
+        >
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            name="code"
+            placeholder="Code Compte"
+            [(ngModel)]="codeCompte"
+          />
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="getCompteByCodeCompte()"
+            id="button-addon2"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="compte" class="card bg-light m-3" style="max-width: 40vw">
+      <div class="card-header">Effectuer une opération</div>
+      <div class="card-body">
+        <h4 class="card-title">Compte : {{ compte.codeCompte }}</h4>
+        <form [formGroup]="form" (submit)="onSubmit()">
+          <fieldset class="form-group">
+            <legend class="mt-4">Opération à effectuer</legend>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  formControlName="operation"
+                  id="optionsRadios1"
+                  value="versement"
+                  checked=""
+                />
+                Versement
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  formControlName="operation"
+                  id="optionsRadios2"
+                  value="retrait"
+                />
+                Retrait
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  formControlName="operation"
+                  id="optionsRadios3"
+                  value="virement"
+                />
+                Virement
+              </label>
+            </div>
+          </fieldset>
+          <label
+            *ngIf="form.value.operation == 'virement'"
+            class="col-form-label mt-4"
+            for="inputDefault"
+            >Vers</label
+          >
+          <input
+            *ngIf="form.value.operation == 'virement'"
+            type="text"
+            class="form-control"
+            formControlName="vers"
+            placeholder="Code Compte"
+          />
+          <label class="col-form-label mt-4" for="inputDefault"
+            >Entrez le montant</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            formControlName="montant"
+            placeholder="Montant"
+          />
+          <button type="submit" class="btn btn-primary m-3">Valider</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="compte" class="row">
+    <div class="card bg-light m-3" style="max-width: 40vw">
+      <div class="card-header">Informations sur le compte</div>
+      <div class="card-body">
+        <p class="card-text">
+          Client: {{ compte.client.nom }} <br />
+          Code Compte: {{ compte.codeCompte }} <br />
+          Solde: {{ compte.solde }} <br />
+          Date de Création: {{ compte.dateCreation | date }}
+        </p>
+      </div>
+    </div>
+
+    <div class="card bg-light m-3" style="max-width: 40vw">
+      <div class="card-header">Listes des opétations</div>
+      <div class="card-body">
+        <table class="row-border hover table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Montant</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="operations?.length != 0">
+            <tr *ngFor="let operation of operations">
+              <td>{{ operation.id }}</td>
+              <td>{{ operation.dateOperation | date }}</td>
+              <td>{{ operation.typeOp | pipeTypeOp }}</td>
+              <td>{{ operation.montant | currency: "EUR" }}</td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="operations?.length == 0">
+            <tr>
+              <td colspan="3" class="no-data-available">No data!</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div>
+          <ul class="pagination pagination-sm">
+            <li
+              *ngFor="let key of nbrPages | pipeNumToArray"
+              class="page-item"
+              [ngClass]="{ active: false }"
+            >
+              <a class="page-link" (click)="getOperationsByCodeCompte(key)">{{
+                key + 1
+              }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
